@@ -1,0 +1,8 @@
+global:
+  postgresqlSecretName: "${postgresql_secret_name}"
+${yamlencode(deployments)}
+
+serviceAccount:
+  name: ${ksa_name}
+  annotations:
+    eks.amazonaws.com/role-arn: ${service_account_aws_iam_role_arn}

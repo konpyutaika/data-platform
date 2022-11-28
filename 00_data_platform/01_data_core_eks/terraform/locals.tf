@@ -1,0 +1,11 @@
+locals {
+  name            = basename(path.cwd)
+  region          = data.aws_region.current.name
+  cluster_version = "1.23"
+  azs             = slice(data.aws_availability_zones.available.names, 0, 3)
+
+  tags = {
+    Blueprint  = local.name
+    GithubRepo = "github.com/aws-ia/terraform-aws-eks-blueprints"
+  }
+}

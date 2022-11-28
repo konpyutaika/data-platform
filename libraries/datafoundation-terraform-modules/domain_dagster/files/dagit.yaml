@@ -1,0 +1,47 @@
+global:
+  postgresqlSecretName: "${postgresql_secret_name}"
+
+dagster-user-deployments:
+  enableSubchart: false
+
+dagsterDaemon:
+  enabled: false
+
+dagit:
+  workspace:
+    enabled: true
+    servers:
+%{ for key,value in user_deployments ~}
+      - host: ${key}
+        port: ${value}
+%{ endfor ~}
+  resources:
+    limits:
+      cpu: 1
+      memory: 200Mi
+    requests:
+      cpu: 1
+      memory: 200Mi
+generatePostgresqlPasswordSecret: false
+postgresql:
+  enabled: false
+  postgresqlHost: "${postgresql_host}"
+  postgresqlUsername: "${postgresql_username}"
+  # Note when changing this password (e.g. in test) that credentials will
+  # persist as long as the PVCs do -- see:
+  # https://github.com/helm/charts/issues/12836#issuecomment-524552358
+  postgresqlPassword: "${postgresql_password}"
+  postgresqlDatabase: "${postgresql_database}"
+serviceAccount:
+  name: ${ksa_name}
+runLauncher:
+  type: K8sRunLauncher
+  config:
+    k8sRunLauncher:
+      resources:
+        limits:
+          cpu: 1
+          memory: 200Mi
+        requests:
+          cpu: 1
+          memory: 200Mi
